@@ -5,6 +5,8 @@ mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 
+const userRoutes = require('./routes/user');
+
 const Sauce = require('./models/Sauce')
 
 mongoose.connect('mongodb+srv://sopekockoadm:Dw7bgMAvhHpxi1e4lXxk@cluster0.1vowr.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
@@ -25,6 +27,9 @@ app.use((req, res, next) => {
 //Transforme le corps de la requête en objet JS utilisable
 app.use(bodyParser.json());
 
+app.use('/api/auth', userRoutes);
+
+//Route pour poster une sauce sur l'application
 app.post('/api/sauces', (req, res, next) => {
   delete req.body._id;
   const sauces = new Sauce({
@@ -32,7 +37,7 @@ app.post('/api/sauces', (req, res, next) => {
     imageUrl: req.body.imageUrl
   });
   sauces.save()
-    .then(() => res.status(201).json({ message: 'Objet enregistré !'}))
+    .then(() => res.status(201).json({ message: 'Votre sauce a été enregistré !'}))
     .catch(error => res.status(400).json({ error }));
 });
 
