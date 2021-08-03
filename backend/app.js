@@ -10,7 +10,7 @@ mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 
-const Sauce = require('./models/Sauce')
+const saucesRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
 
 
@@ -32,6 +32,9 @@ app.use((req, res, next) => {
 //Transforme le corps de la requête en objet JS utilisable
 app.use(bodyParser.json());
 
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
+app.use('/api/sauces', saucesRoutes);
 app.use('/api/auth', userRoutes);
 
 //Route pour poster une sauce sur l'application
