@@ -1,18 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const path = require('path');
-
-const app = express();
 
 const mongoose = require('mongoose');
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 
+const path = require('path');
+
 const saucesRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
-
 
 
 mongoose.connect('mongodb+srv://sopekockoadm:Dw7bgMAvhHpxi1e4lXxk@cluster0.1vowr.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
@@ -20,6 +18,8 @@ mongoose.connect('mongodb+srv://sopekockoadm:Dw7bgMAvhHpxi1e4lXxk@cluster0.1vowr
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
+
+const app = express();
 
 
 app.use((req, res, next) => {
@@ -36,23 +36,6 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use('/api/sauces', saucesRoutes);
 app.use('/api/auth', userRoutes);
-
-//Route pour poster une sauce sur l'application
-// app.post('/api/sauces', (req, res, next) => {
-//   delete req.body._id;
-//   const sauces = new Sauce({
-//     name: req.body.name,
-//     imageUrl: req.body.imageUrl
-//   });
-//   sauces.save()
-//     .then(() => res.status(201).json({ message: 'Votre sauce a été enregistré !'}))
-//     .catch(error => res.status(400).json({ error }));
-// });
-
-// Méthode pour tout type de requête
-// app.use((req, res) => {
-//    res.json({ message: 'Votre requête a bien été reçue !' }); 
-// });
 
 
 module.exports = app;
