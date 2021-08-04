@@ -109,3 +109,38 @@ exports.getAllSauce = (req, res, next) => {
       .catch((error) => {res.status(400).json({error: error})
     });
 };
+
+exports.likeDislike = (req,res, next) => {
+  //Récupération Like déja présent
+  let like = req.body.like;
+  //Récupération de l'Id de l'utilisateur
+  let userId = req.body.userId;
+  //Récupération de l'Id de la sauce en question
+  let sauceId = req.params.id
+
+  //Condition si Like ou Dislike
+
+  if(like === 1){ //L'utilisateur like
+    Sauce.updateOne(
+        {_id: sauceId},
+        {
+          $push: {usersLiked: userId},
+          $inc: {likes: +1}
+        }
+    )
+    .then(() => res.status(200).json({message:'Vous avez aimé !'}))
+    .catch((error) => res.status(400).json({error}))
+  }
+  if(like === -1) { //L'utilisateur n'aime pas
+    Sauce.updateOne(
+      {_id: sauceId},
+      {
+        $push: {usersDisliked: userId},
+        $inc: {dislikes: +1}
+      }
+    )
+    .then(() => res.status(200).json({message:"Vous n'avez pas aimé !"}))
+    .catch((error) => res.status(400).json({error}))
+  }
+
+}
